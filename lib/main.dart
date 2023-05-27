@@ -58,8 +58,42 @@ class Home extends StatelessWidget {
           )
         ],
       ),
+      body: const Row(
+        //mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ColoredBox(
+            color: Colors.orange,
+            child:Column(
+              children: [
+                Text("This is where ")
+              ],
+            ),
+          ),
 
-    );
+          Expanded(
+            child: SingleChildScrollView(
+              child:
+                ColoredBox(
+                  color: Colors.greenAccent,
+                  child: Column(
+                    children: [
+                      Text("Shaper Major Frag"),
+                      Text("Shaper Minor Frag"),
+                      Padding(padding: EdgeInsets.only(bottom: 600)),
+                      Text("Shaper Major Frag"),
+                      Text("Shaper Minor Frag"),
+                      Padding(padding: EdgeInsets.only(bottom: 600)),
+                      Text("Shaper Major Frag"),
+                      Text("Shaper Minor Frag"),
+                      Padding(padding: EdgeInsets.only(bottom: 600)),
+                    ]
+                  ),
+                ),
+              ),
+          ),
+            ],
+          ),
+      );
   }
 }
 
