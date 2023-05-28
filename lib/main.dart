@@ -49,7 +49,7 @@ class Home extends StatelessWidget {
             alignment: MainAxisAlignment.center,
             //TODO: Add button padding
             children: [
-                //TODO: test
+                //TODO: change onPressed to move selected portions to top of current screen
               TextButton(onPressed: (){}, child: const Text("Shaper")),
               TextButton(onPressed: (){}, child: const Text("Elder")),
               TextButton(onPressed: (){}, child: const Text("Guardian")),
@@ -65,7 +65,16 @@ class Home extends StatelessWidget {
             color: Colors.orange,
             child:Column(
               children: [
-                Text("This is where ")
+                DropdownMenu(
+                  //initialSelection: 1,
+                  //label: Text("Select Fragment Set"),
+                  hintText: "Select Frag Set",
+                  dropdownMenuEntries: [
+                      DropdownMenuEntry(value: 1, label: "Shaper"),
+                      DropdownMenuEntry(value: 2, label: "Elder"),
+                      DropdownMenuEntry(value: 3, label: "Guardian"),
+                    ],
+                )
               ],
             ),
           ),
