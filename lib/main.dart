@@ -53,33 +53,27 @@ class Home extends StatelessWidget {
               TextButton(onPressed: (){}, child: const Text("Shaper")),
               TextButton(onPressed: (){}, child: const Text("Elder")),
               TextButton(onPressed: (){}, child: const Text("Guardian")),
-              Padding(padding: EdgeInsets.only(right: MediaQuery.sizeOf(context).width /2))
+              Padding(padding: EdgeInsets.only(right: MediaQuery.sizeOf(context).width /2.25))
             ],
           )
         ],
       ),
-      body: const Row(
+      body: Row(
         //mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ColoredBox(
             color: Colors.orange,
-            child:Column(
-              children: [
-                DropdownMenu(
-                  //initialSelection: 1,
-                  //label: Text("Select Fragment Set"),
-                  hintText: "Select Frag Set",
-                  dropdownMenuEntries: [
-                      DropdownMenuEntry(value: 1, label: "Shaper"),
-                      DropdownMenuEntry(value: 2, label: "Elder"),
-                      DropdownMenuEntry(value: 3, label: "Guardian"),
-                    ],
-                )
-              ],
+            //TODO: Use LayoutBuilder to build responsive size input
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints){
+                return const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [StrategyForm()],);
+              }
             ),
           ),
 
-          Expanded(
+          const Expanded(
             child: SingleChildScrollView(
               child:
                 ColoredBox(
@@ -105,4 +99,60 @@ class Home extends StatelessWidget {
       );
   }
 }
+
+class StrategyForm extends StatefulWidget {
+  const StrategyForm({Key? key}) : super(key: key);
+
+  @override
+  State<StrategyForm> createState() => _StrategyFormState();
+}
+
+class _StrategyFormState extends State<StrategyForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final double formWidth = 200;
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+        key: _formKey,
+        child: Column( //intrinsically limit height
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const DropdownMenu(
+              hintText: "Select Frag Set",
+              dropdownMenuEntries: [
+                DropdownMenuEntry(value: 1, label: "Shaper"),
+                DropdownMenuEntry(value: 2, label: "Elder"),
+                DropdownMenuEntry(value: 3, label: "Guardian"),
+              ],
+            ),
+            SizedBox(
+                width: formWidth,
+                child: TextFormField(
+                    decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                    labelText: 'Enter # of Runs',
+                  ),
+                )
+            ),
+            SizedBox(
+                width: formWidth,
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                    labelText: 'Enter time per run',
+                  ),
+                )
+            ),
+            // TextFormField(),
+            ElevatedButton(onPressed: (){}, child: const Text("Calculate")),
+            const Text("Div per hour:   ")
+          ],
+        )
+    );
+  }
+}
+
+
 
