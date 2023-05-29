@@ -31,13 +31,18 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Home(),
+      home: Home(),
     );
   }
 }
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+   Home({Key? key}) : super(key: key);
+
+  final shaperKey = GlobalKey();
+  final elderKey = GlobalKey();
+  final guardianKey = GlobalKey();
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +55,9 @@ class Home extends StatelessWidget {
             //TODO: Add button padding
             children: [
                 //TODO: change onPressed to move selected portions to top of current screen
-              TextButton(onPressed: (){}, child: const Text("Shaper")),
-              TextButton(onPressed: (){}, child: const Text("Elder")),
-              TextButton(onPressed: (){}, child: const Text("Guardian")),
+              TextButton(onPressed: () => Scrollable.ensureVisible(shaperKey.currentContext!), child: const Text("Shaper")),
+              TextButton(onPressed: () => Scrollable.ensureVisible(elderKey.currentContext!), child: const Text("Elder")),
+              TextButton(onPressed: () => Scrollable.ensureVisible(guardianKey.currentContext!), child: const Text("Guardian")),
               Padding(padding: EdgeInsets.only(right: MediaQuery.sizeOf(context).width /2.25))
             ],
           )
@@ -68,37 +73,55 @@ class Home extends StatelessWidget {
               builder: (BuildContext context, BoxConstraints constraints){
                 return const Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [StrategyForm()],);
+                  children: [
+                    StrategyForm()
+                  ],
+                );
               }
             ),
           ),
-
-          const Expanded(
-            child: SingleChildScrollView(
-              child:
-                ColoredBox(
-                  color: Colors.greenAccent,
-                  child: Column(
-                    children: [
-                      Text("Shaper Major Frag"),
-                      Text("Shaper Minor Frag"),
-                      Padding(padding: EdgeInsets.only(bottom: 600)),
-                      Text("Shaper Major Frag"),
-                      Text("Shaper Minor Frag"),
-                      Padding(padding: EdgeInsets.only(bottom: 600)),
-                      Text("Shaper Major Frag"),
-                      Text("Shaper Minor Frag"),
-                      Padding(padding: EdgeInsets.only(bottom: 600)),
-                    ]
-                  ),
-                ),
-              ),
-          ),
+            ScrollableBody(shaperKey: shaperKey, elderKey: elderKey, guardianKey: guardianKey,)
             ],
           ),
       );
   }
 }
+
+class ScrollableBody extends StatelessWidget {
+   const ScrollableBody({Key? key, @required this.shaperKey, this.elderKey, this.guardianKey}) : super(key: key);
+
+   final Key? shaperKey;
+   final Key? elderKey;
+   final Key? guardianKey;
+
+
+  //final elderKey = GlobalKey();
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: SingleChildScrollView(
+        child:
+        ColoredBox(
+          color: Colors.greenAccent,
+          child: Column(
+              children: [
+                Text(key: shaperKey,"Shaper Major Frag"),
+                Text("Shaper Minor Frag"),
+                Padding(padding: EdgeInsets.only(bottom: 875)),
+                Text(key: elderKey, "Elder Major Frag"),
+                Text("Elder Minor Frag"),
+                Padding(padding: EdgeInsets.only(bottom: 875)),
+                Text(key: guardianKey, "Guardian Major Frag"),
+                Text("Guardian Minor Frag"),
+                Padding(padding: EdgeInsets.only(bottom: 875)),
+              ]
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 class StrategyForm extends StatefulWidget {
   const StrategyForm({Key? key}) : super(key: key);
@@ -115,42 +138,50 @@ class _StrategyFormState extends State<StrategyForm> {
   Widget build(BuildContext context) {
     return Form(
         key: _formKey,
-        child: Column( //intrinsically limit height
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const DropdownMenu(
-              hintText: "Select Frag Set",
-              dropdownMenuEntries: [
-                DropdownMenuEntry(value: 1, label: "Shaper"),
-                DropdownMenuEntry(value: 2, label: "Elder"),
-                DropdownMenuEntry(value: 3, label: "Guardian"),
-              ],
-            ),
-            SizedBox(
-                width: formWidth,
-                child: TextFormField(
-                    decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    labelText: 'Enter # of Runs',
+        child: Container(
+          //padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+            child:
+
+              Column( //intrinsically limit height
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const DropdownMenu(
+                    hintText: "Select Frag Set",
+                    //TODO: Pass entry to a function that retrieves prices of set
+                    dropdownMenuEntries: [
+                      DropdownMenuEntry(value: 1, label: "Shaper"),
+                      DropdownMenuEntry(value: 2, label: "Elder"),
+                      DropdownMenuEntry(value: 3, label: "Guardian"),
+                    ],
                   ),
-                )
-            ),
-            SizedBox(
-                width: formWidth,
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    labelText: 'Enter time per run',
+                  SizedBox(
+                      width: formWidth,
+                      child: TextFormField(
+                          decoration: const InputDecoration(
+                          border: UnderlineInputBorder(),
+                          labelText: 'Enter # of Runs*',
+                        ),
+                      )
                   ),
-                )
-            ),
-            // TextFormField(),
-            ElevatedButton(onPressed: (){}, child: const Text("Calculate")),
-            const Text("Div per hour:   ")
-          ],
-        )
-    );
+                  SizedBox(
+                      width: formWidth,
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          border: UnderlineInputBorder(),
+                          labelText: 'Enter time per run(min)*',
+                        ),
+                      )
+                  ),
+                  // TextFormField(),
+                  ElevatedButton(onPressed: (){}, child: const Text("Calculate")),
+                  const Text("Div per hour: 123 / hr")
+                ].map((widget) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: widget,
+                )).toList(),
+              )
+)    );
   }
 }
 
